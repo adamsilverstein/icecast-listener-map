@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icecast Listener Map Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      color: #666;
+      line-height: 1.6;
+    }
+    .success {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .error {
+      color: #dc3545;
+      font-weight: bold;
+    }
+    pre {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Icecast Listener Map - Test Page</h1>
+    <p>This page tests the connection to the proxy server and verifies that the fixes are working correctly.</p>
+
+    <h2>Server Status</h2>
+    <div id="server-status">Checking server status...</div>
+
+    <h2>Proxy Test</h2>
+    <div id="proxy-test">Testing proxy functionality...</div>
+
+    <h2>Geolocation Test</h2>
+    <div id="geo-test">Testing geolocation proxy...</div>
+
+    <script>
+      // Test server connection
+      fetch('http://localhost:3001/health')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('server-status').innerHTML =
+            `<span class="success">✓ Server is running</span><br>` +
+            `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        })
+        .catch(error => {
+          document.getElementById('server-status').innerHTML =
+            `<span class="error">✗ Server connection failed</span><br>` +
+            `<pre>${error.message}</pre>`;
+        });
+
+      // Test a sample IP geolocation through our proxy
+      const testIP = '8.8.8.8'; // Google's public DNS
+      fetch(`http://localhost:3001/api/geolocate/ipapi/${testIP}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('geo-test').innerHTML =
+            `<span class="success">✓ Geolocation proxy is working</span><br>` +
+            `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        })
+        .catch(error => {
+          document.getElementById('geo-test').innerHTML =
+            `<span class="error">✗ Geolocation proxy failed</span><br>` +
+            `<pre>${error.message}</pre>`;
+
+          // Try the fallback service
+          return fetch(`http://localhost:3001/api/geolocate/ipinfo/${testIP}`)
+            .then(response => response.json())
+            .then(data => {
+              document.getElementById('geo-test').innerHTML +=
+                `<br><span class="success">✓ Fallback geolocation is working</span><br>` +
+                `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            })
+            .catch(fallbackError => {
+              document.getElementById('geo-test').innerHTML +=
+                `<br><span class="error">✗ Fallback geolocation also failed</span><br>` +
+                `<pre>${fallbackError.message}</pre>`;
+            });
+        });
+    </script>
+  </div>
+</body>
+</html>

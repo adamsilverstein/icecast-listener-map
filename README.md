@@ -1,70 +1,123 @@
-# Getting Started with Create React App
+# Icecast Listener Map
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React application that displays a map showing the geographic locations of listeners to an Icecast server. This application can be embedded into any website, including WordPress sites.
 
-## Available Scripts
+![Icecast Listener Map Screenshot](screenshot.png)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Real-time Listener Visualization**: Display listener locations on an interactive map
+- **Multiple Authentication Methods**: Support for environment variables, stored credentials, or manual input
+- **Auto-refresh**: Configurable refresh intervals to keep the map up-to-date
+- **IP Geolocation Caching**: Efficient caching system to minimize API calls
+- **Embedding Support**: Easy embedding in any website with iframe or WordPress shortcode
+- **Responsive Design**: Works on desktop and mobile devices
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/icecast-listener-map.git
+   cd icecast-listener-map
+   ```
 
-### `npm test`
+2. Install dependencies for both the React app and the proxy server:
+   ```
+   npm run install-all
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Start both the React app and the proxy server:
+   ```
+   npm run dev
+   ```
 
-### `npm run build`
+4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The proxy server will run on port 3001 and handle requests to the Icecast server.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Configuration
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Environment Variables
 
-### `npm run eject`
+You can set the following environment variables for authentication:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `REACT_APP_ICECAST_USERNAME`: Your Icecast server admin username
+- `REACT_APP_ICECAST_PASSWORD`: Your Icecast server admin password
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Create a `.env` file in the root directory:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+REACT_APP_ICECAST_USERNAME=your_username
+REACT_APP_ICECAST_PASSWORD=your_password
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Mapbox Token
 
-## Learn More
+The application uses a public Mapbox token with restricted usage. For production use, replace the token in `src/components/map/MapComponent.js` with your own:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```javascript
+const MAPBOX_TOKEN = 'your_mapbox_token';
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
 
-### Code Splitting
+### Authentication
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The application supports three authentication methods:
 
-### Analyzing the Bundle Size
+1. **Environment Variables**: Set `REACT_APP_ICECAST_USERNAME` and `REACT_APP_ICECAST_PASSWORD`
+2. **Stored Credentials**: Save credentials in the browser's local storage
+3. **Manual Input**: Enter credentials each time you use the application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Settings
 
-### Making a Progressive Web App
+- **Auto-Refresh Interval**: Set how often the listener data is refreshed
+- **Manual Refresh**: Refresh the data immediately
+- **Clear Geolocation Cache**: Clear the cached IP geolocation data
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Embedding
 
-### Advanced Configuration
+The application provides several embedding options:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. **HTML Iframe**: Embed in any website using an iframe
+2. **WordPress Shortcode**: Use a shortcode if you have the WordPress plugin installed
+3. **WordPress Plugin**: Create a WordPress plugin using the provided code
 
-### Deployment
+## Icecast Server Compatibility
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This application is designed to work with Icecast 2.x servers. It connects to the admin interface at:
 
-### `npm run build` fails to minify
+```
+https://your-icecast-server:port/admin/listclients.xsl?mount=/your-mount-point
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The default mount point is set to `/live` but can be modified in `src/services/icecastService.js`.
+
+## IP Geolocation
+
+The application uses free geolocation services:
+
+- Primary: [ipapi.co](https://ipapi.co)
+- Fallback: [ipinfo.io](https://ipinfo.io)
+
+Both services have rate limits on their free tiers. The application implements caching to minimize API calls.
+
+## Building for Production
+
+```
+npm run build
+```
+
+This creates a production-ready build in the `build` folder that can be deployed to any static hosting service.
+
+## License
+
+MIT
+
+## Acknowledgements
+
+- [React](https://reactjs.org/)
+- [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
+- [Styled Components](https://styled-components.com/)
+- [Axios](https://axios-http.com/)
+- [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)

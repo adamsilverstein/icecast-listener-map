@@ -7,16 +7,29 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.8.4",
+    "buffer": "^6.0.3",
+    "has-flag": "^5.0.1",
+    "mapbox-gl": "^3.11.0",
+    "process": "^0.11.10",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-map-gl": "^8.0.4",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "stream-browserify": "^3.0.0",
+    "styled-components": "^6.1.17",
+    "timers-browserify": "^2.0.12",
+    "web-vitals": "^2.1.4",
+    "xml2js": "^0.6.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "DISABLE_ESLINT_PLUGIN=true react-app-rewired start",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "server": "cd server && npm start",
+    "dev": "concurrently \"npm run server\" \"npm start\"",
+    "install-all": "npm install && cd server && npm install"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +48,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "react-app-rewired": "^2.2.1"
   }
 }
