@@ -7,7 +7,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "buffer": "^6.0.3",
     "has-flag": "^5.0.1",
     "mapbox-gl": "^3.11.0",
